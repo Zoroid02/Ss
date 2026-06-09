@@ -16,20 +16,47 @@ const Word = ({ children, progress, range }: { children: string, progress: Motio
   );
 };
 
+const ScrollWord = ({ word, progress, range }: { word: string, progress: MotionValue<number>, range: [number, number], key?: string | number }) => {
+  const center = (range[0] + range[1]) / 2;
+  const step = Math.max(0.1, (range[1] - range[0]) * 1.5);
+
+  const scale = useTransform(progress,
+     [Math.max(0, center - step), center, Math.min(1, center + step)],
+     [0.75, 1.25, 0.75]
+  );
+  const opacity = useTransform(progress,
+     [Math.max(0, center - step), center, Math.min(1, center + step)],
+     [0.15, 1, 0.15]
+  );
+  const color = useTransform(progress,
+     [Math.max(0, center - step), center, Math.min(1, center + step)],
+     ["#141414", "#5ba5ef", "#141414"]
+  );
+
+  return (
+    <motion.span 
+      style={{ scale, opacity, color, display: 'inline-block', originX: 0, originY: 0.5 }} 
+      className="mr-3 sm:mr-4 md:mr-6 lg:mr-8 mb-4 leading-tight origin-left"
+    >
+      {word}
+    </motion.span>
+  );
+};
+
 const phrases = [
-  { text: "Mar khaoge", count: "7" },
-  { text: "Bye", count: "5" },
-  { text: "Sorry", count: "5" },
-  { text: "Sent good\ncats videos", count: "∞" },
-  { text: "Acha", count: "50" },
-  { text: "Pata nhi", count: "8" },
-  { text: "Kuch nhi", count: "12" },
-  { text: "Koi ni", count: "9" },
+  { text: "Mar khaoge", count: "9" },
+  { text: "Bye", count: "11" },
+  { text: "Sorry", count: "22" },
+  { text: "Sent good\nca3s videos", count: "∞" },
+  { text: "Acha", count: "214" },
+  { text: "Pata nhi", count: "22" },
+  { text: "Kuch nhi", count: "21" },
+  { text: "Koi ni", count: "27" },
   { text: "Ghanta", count: "15" },
-  { text: "Bolo na\nkya hua", count: "2" },
-  { text: "Good night", count: "27" },
-  { text: "Good meowrning", count: "29" },
-  { text: "Kider ho", count: "6" }
+  { text: "Bolo na\nkya hua", count: "3" },
+  { text: "Good night", count: "56" },
+  { text: "Good meowrning", count: "60" },
+  { text: "Kider ho", count: "10" }
 ];
 
 const PinnedBox = ({ item, index }: { item: { text: string, count: string }, index: number, key?: string | number }) => {
@@ -148,14 +175,14 @@ const ChatToMusicSection = () => {
           style={{ opacity: musicOpacity, y: musicY }}
           className="absolute w-full max-w-[320px] flex flex-col items-center bg-white p-5 rounded-[2rem] shadow-[0_20px_60px_rgba(0,0,0,0.1)]"
         >
-          <div className="text-[10px] sm:text-xs font-mono uppercase tracking-widest text-[#005cff] mb-4 font-bold w-full text-center">90s Playlist</div>
+          <div className="text-[10px] sm:text-xs font-mono uppercase tracking-widest text-[#005cff] mb-4 font-bold w-full text-center">Billota playlist</div>
           
           <div className="w-full aspect-square bg-[#141414] rounded-2xl overflow-hidden mb-5 relative shadow-inner">
-             <img src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=800&auto=format&fit=crop" className="w-full h-full object-cover opacity-90" alt="Album Cover" />
+             <img src="/m1.jpg" className="w-full h-full object-cover opacity-90" alt="Album Cover" />
           </div>
 
           <div className="w-full mb-4 font-mono text-center">
-            <h3 className="text-2xl sm:text-3xl font-bold mb-1 tracking-tight">XYZ</h3>
+            <h3 className="text-2xl sm:text-3xl font-bold mb-1 tracking-tight">Ijazat</h3>
             <p className="text-gray-400 text-sm">Various Artists</p>
           </div>
 
@@ -179,8 +206,8 @@ const ChatToMusicSection = () => {
 
           <div className="w-full bg-[#f4ebd0] rounded-xl p-3 flex items-center gap-3">
              <div className="flex -space-x-2">
-                <img className="w-8 h-8 rounded-full border-[2px] border-[#f4ebd0] object-cover object-center bg-gray-200" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=200&auto=format&fit=crop" alt="User 1" />
-                <img className="w-8 h-8 rounded-full border-[2px] border-[#f4ebd0] object-cover object-center bg-gray-200" src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=200&auto=format&fit=crop" alt="User 2"/>
+                <img className="w-8 h-8 rounded-full border-[2px] border-[#f4ebd0] object-cover object-center bg-gray-200" src="/p1.jpg" alt="User 1" />
+                <img className="w-8 h-8 rounded-full border-[2px] border-[#f4ebd0] object-cover object-center bg-gray-200" src="/p2.jpg" alt="User 2"/>
              </div>
              <div className="font-mono">
                <div className="text-[9px] sm:text-[10px] text-[#005cff] uppercase tracking-wider font-bold mb-0.5">Listening together</div>
@@ -332,33 +359,136 @@ const SlidingCurveSection = () => {
     offset: ["start end", "end end"]
   });
 
-  const curveX = useTransform(scrollYProgress, [0, 1], ["40vw", "-100%"]);
+  const curveX = useTransform(scrollYProgress, [0, 1], ["40vw", "-80%"]);
 
   return (
     <div ref={containerRef} className="h-[800vh] bg-[#f46542] relative w-full">
       <div className="sticky top-0 h-screen w-full flex items-center overflow-hidden">
         <motion.div 
           style={{ x: curveX }} 
-          className="absolute left-0 flex items-center w-[5000px] lg:w-[7000px] h-[800px]"
+          className="absolute left-0 flex items-center w-[3500px] lg:w-[4500px] h-[800px]"
         >
            <svg 
              className="w-full h-full overflow-visible"
-             viewBox="0 0 7000 800"
+             viewBox="0 0 4500 800"
            >
              <path 
                id="sliding-curve"
-               d="M 0 400 Q 1750 0 3500 400 T 7000 400" 
+               d="M 0 400 Q 1125 0 2250 400 T 4500 400" 
                fill="transparent" 
                stroke="#141414" 
                strokeWidth="10" 
              />
-             <text className="font-sans font-black text-[3.5rem] sm:text-[5rem] lg:text-[7rem] fill-[#fdda33] uppercase tracking-normal" dy="-30" style={{ wordSpacing: '0.3em' }}>
+             <text className="font-sans font-black text-[3.5rem] sm:text-[5rem] lg:text-[6.5rem] fill-[#fdda33] uppercase tracking-normal" dy="-30" style={{ wordSpacing: '0.3em' }}>
                <textPath href="#sliding-curve" startOffset="10%" textAnchor="start">
-                 I know you got too much from everyone even from me
+                 I know you got hurt from ever close one even from me
                </textPath>
              </text>
            </svg>
         </motion.div>
+      </div>
+    </div>
+  );
+};
+
+const ScrollTextSection = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start center", "end center"]
+  });
+
+  const rawText = "You are stepping back to protect your self that's completely okay I used to do the same, you cared about me that night and listened. You are a amazing person.";
+  const words = rawText.split(" ");
+
+  return (
+    <div ref={containerRef} className="h-[300vh] bg-[#f5f0e6] relative w-full pt-[10vh] pb-[10vh]">
+       <div className="sticky top-0 h-screen w-full flex items-center justify-center px-6 sm:px-12 md:px-24 overflow-hidden">
+         <div className="max-w-6xl flex flex-wrap justify-start items-center font-mono text-[2rem] sm:text-[3rem] md:text-[4rem] lg:text-[5.5rem] uppercase font-bold text-[#141414]">
+           {words.map((word, i) => {
+             const start = i / words.length;
+             const end = start + (1 / words.length);
+             return <ScrollWord key={i} word={word} progress={scrollYProgress} range={[start, end]} />
+           })}
+         </div>
+       </div>
+    </div>
+  )
+}
+
+const DiagonalStripsSection = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end end"]
+  });
+
+  const strip1X = useTransform(scrollYProgress, [0, 0.15, 0.35, 0.45, 1], ["-100vw", "0vw", "5vw", "-150vw", "-150vw"]);
+  const strip1Y = useTransform(scrollYProgress, [0, 0.15, 0.35, 0.45, 1], ["-100vh", "-10vh", "-15vh", "-100vh", "-100vh"]);
+
+  const strip2X = useTransform(scrollYProgress, [0.08, 0.25, 0.4, 0.48, 1], ["100vw", "0vw", "-5vw", "150vw", "150vw"]);
+  const strip2Y = useTransform(scrollYProgress, [0.08, 0.25, 0.4, 0.48, 1], ["100vh", "10vh", "5vh", "100vh", "100vh"]);
+
+  const stripsOpacity = useTransform(scrollYProgress, [0, 0.35, 0.45, 1], [1, 1, 0, 0]);
+
+  const word1Opacity = useTransform(scrollYProgress, [0, 0.45, 0.5, 0.55, 0.6, 1], [0, 0, 1, 1, 0, 0]);
+  const word1Scale = useTransform(scrollYProgress, [0, 0.45, 0.6, 1], [0.5, 0.5, 1.5, 1.5]);
+
+  const word2Opacity = useTransform(scrollYProgress, [0, 0.58, 0.63, 0.68, 0.73, 1], [0, 0, 1, 1, 0, 0]);
+  const word2Scale = useTransform(scrollYProgress, [0, 0.58, 0.73, 1], [0.5, 0.5, 1.5, 1.5]);
+
+  const word3Opacity = useTransform(scrollYProgress, [0, 0.71, 0.76, 0.81, 0.86, 1], [0, 0, 1, 1, 0, 0]);
+  const word3Scale = useTransform(scrollYProgress, [0, 0.71, 0.86, 1], [0.5, 0.5, 1.2, 1.2]);
+
+  const word4Opacity = useTransform(scrollYProgress, [0, 0.84, 0.89, 1], [0, 0, 1, 1]);
+  const word4Scale = useTransform(scrollYProgress, [0, 0.84, 1], [0.8, 0.8, 1]);
+
+  return (
+    <div ref={containerRef} className="h-[800vh] bg-[#5ba5ef] relative w-full">
+      <div className="sticky top-0 h-screen w-full overflow-hidden">
+        
+        <motion.div style={{ opacity: stripsOpacity }} className="absolute inset-0 pointer-events-none z-10 w-full h-full">
+          {/* Strip 1 Wrapper */}
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <motion.div 
+              style={{ x: strip1X, y: strip1Y, rotate: -10 }}
+              className="bg-[#141414] text-[#f5f0e6] w-[150vw] sm:w-[120vw] py-8 sm:py-12 z-10 flex justify-center shadow-[0_30px_60px_rgba(0,0,0,0.4)] pointer-events-auto"
+            >
+               <p className="font-mono text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold uppercase text-center max-w-[80vw] sm:max-w-5xl mx-auto tracking-tight leading-snug">
+                 I really don't want to hurt you that day, I removed you from friend list, I am sorry
+               </p>
+            </motion.div>
+          </div>
+
+          {/* Strip 2 Wrapper */}
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <motion.div 
+              style={{ x: strip2X, y: strip2Y, rotate: 6 }}
+              className="bg-[#fad335] text-[#141414] w-[150vw] sm:w-[120vw] py-8 sm:py-12 z-20 flex justify-center shadow-[0_30px_60px_rgba(0,0,0,0.3)] pointer-events-auto"
+            >
+               <p className="font-sans font-black text-lg sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl uppercase text-center max-w-[90vw] sm:max-w-6xl mx-auto tracking-tighter leading-none">
+                 If you are comfortable let's be good friends this was a small speed breaker and this isn't from loyan
+               </p>
+            </motion.div>
+          </div>
+        </motion.div>
+
+        {/* Words Container */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-30">
+          <motion.div style={{ opacity: word1Opacity, scale: word1Scale }} className="absolute text-center flex items-center justify-center">
+            <h2 className="font-sans font-black text-[5rem] sm:text-7xl md:text-9xl lg:text-[12rem] text-[#f5f0e6] uppercase tracking-tighter drop-shadow-md">It's</h2>
+          </motion.div>
+          <motion.div style={{ opacity: word2Opacity, scale: word2Scale }} className="absolute text-center flex items-center justify-center">
+            <h2 className="font-sans font-black text-[5rem] sm:text-7xl md:text-9xl lg:text-[12rem] text-[#fad335] uppercase tracking-tighter drop-shadow-md">from</h2>
+          </motion.div>
+          <motion.div style={{ opacity: word3Opacity, scale: word3Scale }} className="absolute text-center flex items-center justify-center">
+            <h2 className="font-sans font-black text-[5rem] sm:text-7xl md:text-[9rem] lg:text-[12rem] xl:text-[14rem] text-[#141414] uppercase tracking-tighter drop-shadow-2xl whitespace-nowrap">Billota 😾</h2>
+          </motion.div>
+          <motion.div style={{ opacity: word4Opacity, scale: word4Scale }} className="absolute text-center flex items-center justify-center w-full px-4">
+            <h2 className="font-sans font-black text-[3rem] sm:text-[4rem] md:text-[6rem] lg:text-[8rem] text-white uppercase tracking-tighter drop-shadow-xl leading-none text-center">Happy birthday<br/>in advance<br/><span className="text-[#fad335]">Billoti 😸</span></h2>
+          </motion.div>
+        </div>
+
       </div>
     </div>
   );
@@ -550,6 +680,9 @@ Oh, we don't talk anymore like we used to do`;
       {/* Pinned Stats Section */}
       <div className="bg-[#ccabf7] text-[#141414] pt-24 sm:pt-32 pb-32 sm:pb-48 w-full relative overflow-hidden">
         <div className="w-full max-w-7xl mx-auto px-4 sm:px-8 xl:px-16">
+          <h2 className="font-sans font-black text-4xl sm:text-5xl md:text-6xl lg:text-7xl uppercase text-center mb-16 sm:mb-24 tracking-tighter">
+            Word count upto 12 Feburary
+          </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-16 gap-x-8 sm:gap-x-12">
             {phrases.map((item, index) => (
               <PinnedBox key={index} item={item} index={index} />
@@ -567,6 +700,10 @@ Oh, we don't talk anymore like we used to do`;
       <ListenSection />
 
       <SlidingCurveSection />
+
+      <ScrollTextSection />
+
+      <DiagonalStripsSection />
     </div>
   );
 }
